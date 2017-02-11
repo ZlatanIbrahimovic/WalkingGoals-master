@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import static com.android_examples.slidingtab_android_examplescom.GoalContract.Goal.COLUMN_NAME_DATE;
 import static com.android_examples.slidingtab_android_examplescom.GoalContract.Goal.COLUMN_NAME_PROGRESS;
 import static com.android_examples.slidingtab_android_examplescom.GoalContract.Goal.TABLE_NAME;
 
@@ -43,7 +44,6 @@ public final class GoalContract {
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
 
-
     public static class GoalDbHelper extends SQLiteOpenHelper {
         // If you change the database schema, you must increment the database version.
         public static final int DATABASE_VERSION = 1;
@@ -70,6 +70,10 @@ public final class GoalContract {
             db.execSQL(rawQuery);
         }
 
+        public void clearHistory (SQLiteDatabase db){
+            String rawQuery = "UPDATE " + TABLE_NAME + " SET " + COLUMN_NAME_DATE +  " = 0";
+            db.execSQL(rawQuery);
+        }
 
 
         public String getTableAsString(SQLiteDatabase db, String tableName) {

@@ -34,6 +34,18 @@
         android:entries="@array/units_array"
         android:entryValues="@array/units_array" />
 
+    <EditTextPreference
+        android:key="stepMapping"
+        android:title="@string/stepMappingTitle"
+        android:summary="@string/stepMappingSummary"
+        android:dialogTitle="@string/stepMappingDialogTitle"
+        android:defaultValue="@string/stepMappingValueDefault"
+        />
+
+    <com.android_examples.slidingtab_android_examplescom.YesNo
+        android:title="@string/clearHistoryTitle"
+        />
+
 
 
 </PreferenceScreen>

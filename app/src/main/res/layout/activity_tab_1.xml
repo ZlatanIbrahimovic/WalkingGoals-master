@@ -37,7 +37,7 @@
         android:layout_height="40dp"
         android:adjustViewBounds="true"
         android:background="@color/grey"
-        android:layout_marginTop="79dp"
+        android:layout_marginTop="125dp"
         android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"></ImageView>
@@ -98,7 +98,6 @@
         android:layout_marginBottom="24dp" />
 
     <TextView
-        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/goalTitleTxt"
@@ -109,7 +108,6 @@
         android:layout_alignStart="@+id/goalsHeading" />
 
     <TextView
-        android:text="80%"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/imageView"
@@ -119,7 +117,8 @@
         android:layout_alignParentEnd="true"
         android:textAlignment="center"
         android:textSize="30sp"
-        android:id="@+id/todaysGoalPercentageTxt" />
+        android:id="@+id/todaysGoalPercentageTxt"
+        android:text="cdcs" />
 
     <ImageButton
         android:layout_width="70dp"
@@ -132,7 +131,6 @@
         android:layout_alignEnd="@+id/textView" />
 
     <TextView
-        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/todaysGoalDistanceTxt"
@@ -143,27 +141,22 @@
         android:layout_alignTop="@+id/goalTitleTxt"
         android:layout_above="@+id/imageButton6" />
 
-    <ImageButton
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:src="@drawable/ic_add_dark_24px"
-        android:background="@android:color/transparent"
-        android:layout_alignTop="@+id/textView"
-        android:layout_toRightOf="@+id/goalProgressBar"
-        android:layout_toEndOf="@+id/goalProgressBar"
-        android:id="@+id/addProgressBtn" />
+    <!--android:layout_gravity="right|bottom"-->
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="24dp" />
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_height="wrap_content"
         android:id="@+id/goalProgressBar"
-        android:progress="80"
+        android:progress="0"
         android:layout_width="300dp"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/todaysGoalRecordedTxt"
@@ -186,6 +179,16 @@
         android:textColor="@color/helperTextColour"
         android:cursorVisible="false"
         android:visibility="gone" />
+
+    <ImageButton
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/ic_add_black_24px"
+        android:background="@drawable/circle"
+        android:id="@+id/addProgress"
+        android:layout_below="@+id/todaysGoalRecordedTxt"
+        android:layout_alignLeft="@+id/addGoal"
+        android:layout_alignStart="@+id/addGoal" />
 
 
 </RelativeLayout>

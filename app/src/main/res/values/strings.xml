@@ -46,12 +46,6 @@
 
     <!--preferences-->
 
-    <string name="pref_sync">pref_sync</string>
-    <string name="pref_sync_summ">pref_sync_summ</string>
-    <string name="ref_syncConnectionType">ref_syncConnectionType</string>
-    <string name="pref_syncConnectionType">pref_syncConnectionType</string>
-    <string name="pref_syncConnectionTypes_default">pref_syncConnectionTypes_default</string>
-
     <string name="editGoalsTitle">Edit goals</string>
 
     <string name="notificationsTitle">Notifications</string>
@@ -60,10 +54,16 @@
     <string name="testModeDate">Test mode date</string>
     <string name="testModeDateSummary">Specify current date for the app</string>
 
-
     <string name="presentationTitle">Default presentation units</string>
     <string name="presentationSummary">Display units for activity, history and statistics</string>
     <string name="presentationValueDefault">Meters</string>
     <string name="presentationDialogTitle">Default units</string>
+
+    <string name="stepMappingTitle">Step length</string>
+    <string name="stepMappingSummary">Distance covered by a single stride</string>
+    <string name="stepMappingDialogTitle">Step length (m)</string>
+    <string name="stepMappingValueDefault">0.762</string>
+
+    <string name="clearHistoryTitle">Clear goal history</string>
 
 </resources>

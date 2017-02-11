@@ -42,6 +42,7 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
     private SimpleAdapter adapter;
     private List<Map<String, String>> data;
     private GoalsListDisplay todaysGoal;
+    private long systemTime;
 
 
     @Override
@@ -49,14 +50,9 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
         final View view =  inflater.inflate(R.layout.activity_tab_1, container, false);
         this.view = view;
 
-
-
-        Context context = getActivity();
-        GoalContract.GoalDbHelper mDbHelper = new GoalContract.GoalDbHelper(context);
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
         initialiseCreateGoalButton();
         initialiseAddProgressButton();
+        setSystemTime();
 
         retrieveGoals();
         initialiseList();
@@ -68,6 +64,29 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
     }
 
 
+    private void setSystemTime() {
+        systemTime = -2;
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        if (prefs.getBoolean("testMode", false)){
+            Calendar cal = Calendar.getInstance();
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date dates = formatter.parse(prefs.getString("keyname",null));
+                cal.setTime(dates);
+                cal.add(Calendar.MONTH, 1);
+                systemTime = cal.getTimeInMillis();
+            } catch (ParseException e) {e.printStackTrace();}
+
+        }
+        else{
+            systemTime = System.currentTimeMillis();
+        }
+
+        System.out.println(systemTime);
+    }
+
 
     private void initialiseTimer() {
         Timer timer = new Timer();
@@ -77,13 +96,14 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
                 TextView goalExpired = (TextView) view.findViewById(R.id.goalExpired);
                 if (todaysGoal != null) {
                     Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis(systemTime);
                     if (DateUtils.isSameDay(cal, todaysGoal.getCalendarDate())) {
 //                        System.out.println("1");
                         goalExpired.setVisibility(View.GONE);
                     }
                     else{
 //                        System.out.println("2");
-                        goalExpired.setVisibility(View.VISIBLE);
+//                        goalExpired.setVisibility(View.VISIBLE);
                         todaysGoal = null;
                     }
                 }
@@ -94,7 +114,7 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
 
 
     private void initialiseAddProgressButton() {
-        ImageButton addProgressBtn = (ImageButton) view.findViewById(R.id.addProgressBtn);
+        ImageButton addProgressBtn = (ImageButton) view.findViewById(R.id.addProgress);
         addProgressBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,10 +163,13 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
     @Override
     public void onResume() {
         super.onResume();
+        setSystemTime();
         retrieveGoals();
         initialiseList();
         retreiveTodaysGoal();
-        displayTodaysGoal();
+        if (todaysGoal != null) {
+            displayTodaysGoal();
+        }
     }
 
     /*Add onClick listener to floating action button, which switches to AddGoalActivity when tapped*/
@@ -205,30 +228,8 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
         Context context = getActivity();
         GoalContract.GoalDbHelper mDbHelper = new GoalContract.GoalDbHelper(context);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        long systemTime = -2;
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-
-        System.out.println(prefs.getAll());
-        if (prefs.getBoolean("testMode", true)){
-            Calendar cal = Calendar.getInstance();
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                Date dates = formatter.parse(prefs.getString("keyname",null));
-                cal.setTime(dates);
-                cal.add(Calendar.MONTH, 1);
-                systemTime = cal.getTimeInMillis();
-            } catch (ParseException e) {e.printStackTrace();}
-
-        }
-        else{
-            System.out.println("NOT test mode");
-            systemTime = System.currentTimeMillis();
-        }
-
-        System.out.println(systemTime);
-        
-
+        setSystemTime();
         // If there is an existing goal
         if (todaysGoal != null) {
             // Update new goal with current date and transfer progress
@@ -258,13 +259,16 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
 
     protected void retreiveTodaysGoal() {
 //        System.out.println("Today's time:     "  + System.currentTimeMillis());
+        Calendar systemDateCalendar = Calendar.getInstance();
+        systemDateCalendar.setTimeInMillis(systemTime);
         if (goals != null) {
             for (GoalsListDisplay goal : goals) {
                 System.out.println(goal.getDate());
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(goal.getDate());
 //                System.out.println("Goal Time " + goal.getTitle() + "     :" + goal.getDate());
-                if (DateUtils.isToday(calendar)) {
+//                if (DateUtils.isToday(calendar)) {
+                    if (DateUtils.isSameDay(calendar,systemDateCalendar)) {
                     todaysGoal = goal;
                     System.out.println(todaysGoal.getId());
                 }

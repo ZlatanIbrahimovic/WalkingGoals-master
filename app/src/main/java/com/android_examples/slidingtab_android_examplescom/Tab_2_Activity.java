@@ -5,8 +5,10 @@ package com.android_examples.slidingtab_android_examplescom;
  */
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +19,12 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +35,7 @@ public class Tab_2_Activity extends Fragment {
     private Spinner unitsSpinner;
     private RangeSeekBar rangeSeekBar;
     private ArrayList<GoalsListDisplay> historyResults;
+    private long systemTime;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,7 +54,6 @@ public class Tab_2_Activity extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-
         if (isVisibleToUser) {
             retrieveGoals();
             initialiseList();
@@ -131,6 +137,8 @@ public class Tab_2_Activity extends Fragment {
             return;
         }
 
+        setSystemTime();
+
         for (GoalsListDisplay goal : goals){
             if (goal.getPercentage() >= minPercent && goal.getPercentage() <= maxPercent && goal.getDate() > 0){
                 if (historyView.equals("Show all")){
@@ -138,6 +146,7 @@ public class Tab_2_Activity extends Fragment {
                 }
                 else if (historyView.equals("Week view")){
                     Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis(systemTime);
                     cal.add(Calendar.DATE, -7);
                     if (DateUtils.isAfterDay(goal.getCalendarDate(), cal)){
                         results.add(goal);
@@ -145,6 +154,7 @@ public class Tab_2_Activity extends Fragment {
                 }
                 else if (historyView.equals("Month view")){
                     Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis(systemTime);
                     cal.add(Calendar.MONTH, -1);
                     if (DateUtils.isAfterDay(goal.getCalendarDate(), cal)){
                         results.add(goal);
@@ -170,6 +180,30 @@ public class Tab_2_Activity extends Fragment {
                 R.array.units_array, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         unitsSpinner.setAdapter(arrayAdapter);
+    }
+
+
+    private void setSystemTime() {
+        systemTime = -2;
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        if (prefs.getBoolean("testMode", false)){
+            Calendar cal = Calendar.getInstance();
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date dates = formatter.parse(prefs.getString("keyname",null));
+                cal.setTime(dates);
+                cal.add(Calendar.MONTH, 1);
+                systemTime = cal.getTimeInMillis();
+            } catch (ParseException e) {e.printStackTrace();}
+
+        }
+        else{
+            systemTime = System.currentTimeMillis();
+        }
+
+        System.out.println(systemTime);
     }
 
 }

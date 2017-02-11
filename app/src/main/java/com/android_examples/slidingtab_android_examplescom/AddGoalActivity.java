@@ -86,7 +86,7 @@ public class AddGoalActivity extends AppCompatActivity implements View.OnClickLi
             values.put(GoalContract.Goal.COLUMN_NAME_TITLE, title);
             values.put(GoalContract.Goal.COLUMN_NAME_DISTANCE, distance);
             values.put(GoalContract.Goal.COLUMN_NAME_UNITS, units);
-            values.put(GoalContract.Goal.COLUMN_NAME_PROGRESS, 50.0);
+            values.put(GoalContract.Goal.COLUMN_NAME_PROGRESS, 0.0);
             values.put(GoalContract.Goal.COLUMN_NAME_DATE, -1);
 
             // Insert the new row, returning the primary key value of the new row
