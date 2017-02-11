@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('materialdatetimepicker-3.1.1.aar'))

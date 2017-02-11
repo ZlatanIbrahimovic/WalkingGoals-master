@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.android_examples.slidingtab_android_examplescom.MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"
+        android:elevation="6dp"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        />
+
+
+    <com.android_examples.slidingtab_android_examplescom.CustomTextInputLayout
+        android:id="@+id/tilCustom3"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        app:helperText=""
+        app:helperTextColor="@color/helperTextColour"
+        android:layout_marginTop="100dp"
+        android:layout_below="@+id/toolbar1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <EditText
+            android:id="@+id/addGoalDistance"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:hint="Distance"
+            android:textSize="18sp"
+            android:inputType="number|numberDecimal" />
+
+    </com.android_examples.slidingtab_android_examplescom.CustomTextInputLayout>
+
+    <com.android_examples.slidingtab_android_examplescom.CustomTextInputLayout
+        android:id="@+id/tilCustom4"
+        android:layout_height="wrap_content"
+        app:helperText=""
+        app:helperTextColor="@color/helperTextColour"
+        android:layout_width="370dp"
+        android:layout_below="@+id/toolbar1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:weightSum="1">
+
+        <EditText
+            android:id="@+id/addGoalTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title"
+            android:textSize="24sp" />
+
+    </com.android_examples.slidingtab_android_examplescom.CustomTextInputLayout>
+
+    <Spinner
+        android:layout_width="150dp"
+        android:id="@+id/addGoalUnitSelector"
+        android:layout_height="48dp"
+        android:layout_toLeftOf="@+id/save"
+        android:layout_toStartOf="@+id/save"
+        android:layout_alignBottom="@+id/tilCustom3" />
+
+    <Button
+        android:text="Save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/save"
+        android:layout_marginRight="31dp"
+        android:layout_marginEnd="31dp"
+        android:layout_below="@+id/tilCustom3"
+        android:layout_alignRight="@+id/tilCustom4"
+        android:layout_alignEnd="@+id/tilCustom4" />
+
+
+</RelativeLayout>

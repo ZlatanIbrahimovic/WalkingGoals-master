@@ -1,0 +1,33 @@
+<resources>
+    <string-array name="listArray">
+        <item>Headings</item>
+        <item>Headings and Details</item>
+        <item>All Data</item>
+    </string-array>
+
+    <string-array name="listValues">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <!--Preferences-->
+
+    <string-array name="pref_syncConnectionTypes_entries">
+        <item>Types_entries 1</item>
+        <item>Types_entries 2</item>
+        <item>Types_entries 3</item>
+        <item>Types_entries 4</item>
+    </string-array>
+
+    <string-array name="pref_syncConnectionTypes_values">
+        <item>Types_values 1</item>
+        <item>Types_values 2</item>
+        <item>Types_values 3</item>
+        <item>Types_values 4</item>
+    </string-array>
+
+
+
+
+</resources>

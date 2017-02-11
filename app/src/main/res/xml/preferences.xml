@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <SwitchPreference
+        android:key="editGoals"
+        android:title="@string/editGoalsTitle" />
+
+    <SwitchPreference
+        android:key="notifications"
+        android:title="@string/notificationsTitle" />
+
+
+    <SwitchPreference
+        android:key="testMode"
+        android:title="@string/testModeTitle" />
+
+
+
+    <com.android_examples.slidingtab_android_examplescom.DatePreference
+        android:dependency="testMode"
+        android:key="keyname"
+        android:title="@string/testModeDate"
+        android:defaultValue="2014-08-01"
+        android:summary="@string/testModeDateSummary"/>
+
+
+    <ListPreference
+        android:key="presentationUnits"
+        android:title="@string/presentationTitle"
+        android:summary="@string/presentationSummary"
+        android:defaultValue="@string/presentationValueDefault"
+        android:dialogTitle="@string/presentationDialogTitle"
+        android:entries="@array/units_array"
+        android:entryValues="@array/units_array" />
+
+
+
+</PreferenceScreen>

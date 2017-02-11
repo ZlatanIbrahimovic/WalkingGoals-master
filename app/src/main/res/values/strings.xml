@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">Walking Goals</string>
+    <string name="addGoalActivityName">Create Goal</string>
+    <string name="editGoalActivityName">Edit Goal</string>
+    <string name="addProgressActivityName">Edit Goal</string>
+    <string name="settings">Settings</string>
+
+    <color name="grey">#d9d9db</color>
+    <string name="goalsHeading">Today\'s goal</string>
+    <string name="goalsHeading2">Other goals</string>
+    <string name="tab1">GOALS</string>
+    <string name="tabTitle1">Goals</string>
+    <string name="tab2">HISTORY</string>
+    <string name="tabTitle2">History</string>
+    <string name="tab3">STATISTICS</string>
+    <string name="tabTitle3">Statistics</string>
+
+    <string-array name="units_array">
+        <item>Meters</item>
+        <item>Kilometers</item>
+        <item>Yards</item>
+        <item>Feet</item>
+        <item>Steps</item>
+    </string-array>
+
+    <!--Goals popup Menu options-->
+    <string name="popupSetGoalOption">Set as today\'s goal</string>
+    <string name="popupEditOption">Edit</string>
+    <string name="popupDeleteOption">Delete</string>
+
+    <string name="goalExpired">Your Goal has Expired, please set another goal</string>
+
+
+    <!--history-->
+
+    <string-array name="viewArray">
+        <item>Show all</item>
+        <item>Week view</item>
+        <item>Month view</item>
+        <item>Custom range</item>
+    </string-array>
+
+    <string name="demo_min_label">0%</string>
+    <string name="demo_max_label">100%</string>
+
+
+    <!--preferences-->
+
+    <string name="pref_sync">pref_sync</string>
+    <string name="pref_sync_summ">pref_sync_summ</string>
+    <string name="ref_syncConnectionType">ref_syncConnectionType</string>
+    <string name="pref_syncConnectionType">pref_syncConnectionType</string>
+    <string name="pref_syncConnectionTypes_default">pref_syncConnectionTypes_default</string>
+
+    <string name="editGoalsTitle">Edit goals</string>
+
+    <string name="notificationsTitle">Notifications</string>
+
+    <string name="testModeTitle">Test mode</string>
+    <string name="testModeDate">Test mode date</string>
+    <string name="testModeDateSummary">Specify current date for the app</string>
+
+
+    <string name="presentationTitle">Default presentation units</string>
+    <string name="presentationSummary">Display units for activity, history and statistics</string>
+    <string name="presentationValueDefault">Meters</string>
+    <string name="presentationDialogTitle">Default units</string>
+
+</resources>
