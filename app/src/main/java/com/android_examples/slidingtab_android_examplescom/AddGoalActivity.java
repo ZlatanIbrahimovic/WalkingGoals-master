@@ -60,6 +60,13 @@ public class AddGoalActivity extends AppCompatActivity implements View.OnClickLi
 
         btnDone = (Button) findViewById(R.id.save);
         btnDone.setOnClickListener(this);
+
+        testDistanceConversion();
+    }
+
+    private void testDistanceConversion() {
+        System.out.println(new DistanceConversion(3.0, "Meters", "Feet", getApplicationContext()).convert());
+        System.out.println(new DistanceConversion(3.0, "Steps", "Meters", getApplicationContext()).convert());
     }
 
 
