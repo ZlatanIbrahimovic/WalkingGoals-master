@@ -27,7 +27,9 @@ public class DistanceConversion extends AppCompatActivity {
     }
 
     public double convert() {
+
         if (convertFromUnits.equals("Meters")){
+            System.out.println("HERE");
             return convertFromMeters();
         }
         else if (convertFromUnits.equals("Kilometers")){
@@ -43,7 +45,7 @@ public class DistanceConversion extends AppCompatActivity {
             return convertFromSteps();
         }
         else{
-            return 1.00;
+            return (convertFromValue*1.00);
         }
     }
 
@@ -52,7 +54,7 @@ public class DistanceConversion extends AppCompatActivity {
             return round(convertFromValue*metersInStep, 2);
         }
         else if (convertToUnits.equals("Kilometers")){
-            return round((convertFromValue*metersInStep)*1000, 2);
+            return round((convertFromValue*metersInStep)*0.001, 2);
         }
         else if (convertToUnits.equals("Yards")){
             return round((convertFromValue*metersInStep)*1.09361, 2);
@@ -61,7 +63,7 @@ public class DistanceConversion extends AppCompatActivity {
             return round((convertFromValue*metersInStep)*3.28084, 2);
         }
         else{
-            return 1.00;
+            return (convertFromValue*1.00);
         }
     }
 
@@ -79,7 +81,7 @@ public class DistanceConversion extends AppCompatActivity {
             return round(convertFromValue*0.3048/metersInStep, 2);
         }
         else{
-            return 1.00;
+            return (convertFromValue*1.00);
         }
     }
 
@@ -97,7 +99,7 @@ public class DistanceConversion extends AppCompatActivity {
             return round((convertFromValue*0.9144)/metersInStep, 2);
         }
         else{
-            return 0.00;
+            return (convertFromValue*1.00);
         }
     }
 
@@ -115,7 +117,7 @@ public class DistanceConversion extends AppCompatActivity {
             return round((convertFromValue*1000/metersInStep), 2);
         }
         else{
-            return 1.00;
+            return (convertFromValue*1.00);
         }
     }
 
@@ -133,7 +135,7 @@ public class DistanceConversion extends AppCompatActivity {
             return round(convertFromValue/metersInStep, 2);
         }
         else{
-            return 1.00;
+            return (convertFromValue*1.00);
         }
     }
 

@@ -95,6 +95,17 @@ public final class GoalContract {
             return tableString;
         }
 
+        public static String getGoalUnits(SQLiteDatabase db, int id){
+            String rawQuery = "Select " + Goal.COLUMN_NAME_UNITS + " from " + Goal.TABLE_NAME + " where _id = " + id;
+            Cursor c = db.rawQuery(rawQuery, null);
+            if (!c.moveToFirst()) {
+                return null;
+            }
+            else{
+                return c.getString(c.getColumnIndex(Goal.COLUMN_NAME_UNITS));
+            }
+        }
+
         public ArrayList<GoalsListDisplay> getAllGoals(SQLiteDatabase db, String tableName) {
             ArrayList<GoalsListDisplay> results = new ArrayList<GoalsListDisplay>();
             try {

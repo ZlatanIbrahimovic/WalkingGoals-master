@@ -65,8 +65,15 @@ public class AddProgressActivity extends AppCompatActivity implements View.OnCli
         if (distanceValid){
             Double distance = Double.parseDouble(addGoalDistance.getText().toString().trim());
             Spinner addGoalUnitSelector = (Spinner) findViewById(R.id.addGoalUnitSelector);
-            String units = addGoalUnitSelector.getSelectedItem().toString();
-            mDbHelper.increaseProgress(db, getIntent().getIntExtra("id", 0), distance);
+            String selectedUnits = addGoalUnitSelector.getSelectedItem().toString();
+            String goalUnits = getIntent().getExtras().getString("units");
+
+            Double convertedDistance = new DistanceConversion(distance, selectedUnits, goalUnits, getApplicationContext()).convert();
+
+//            System.out.println("Converting " + distance + " " + selectedUnits + " to " + goalUnits + " : " + convertedDistance);
+
+            mDbHelper.increaseProgress(db, getIntent().getIntExtra("id", 0), convertedDistance);
+
             finish();
         }
     }

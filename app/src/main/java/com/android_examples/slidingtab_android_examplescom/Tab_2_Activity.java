@@ -36,6 +36,7 @@ public class Tab_2_Activity extends Fragment {
     private RangeSeekBar rangeSeekBar;
     private ArrayList<GoalsListDisplay> historyResults;
     private long systemTime;
+    private String selectedUnits;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class Tab_2_Activity extends Fragment {
 
         populateSpinnerOptions();
         setupSpinnerListeners();
+        setSelectedUnits();
         setupSeekbar();
         retrieveGoals();
         initialiseList();
@@ -51,13 +53,26 @@ public class Tab_2_Activity extends Fragment {
         return view;
     }
 
+    private void setSelectedUnits() {
+        selectedUnits = unitsSpinner.getSelectedItem().toString();
+    }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
+            setSelectedUnits();
             retrieveGoals();
             initialiseList();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setSelectedUnits();
+        retrieveGoals();
+        initialiseList();
     }
 
 
@@ -68,9 +83,15 @@ public class Tab_2_Activity extends Fragment {
         if(historyResults != null){
             for (int i = 0; i < historyResults.size(); i++) {
                 Map<String, String> datum = new HashMap<String, String>(2);
+                String goalUnits = historyResults.get(i).getUnits();
+                double distance = Double.parseDouble(historyResults.get(i).getDistance());
+                double convertedDistance = new DistanceConversion(distance, goalUnits, selectedUnits, view.getContext()).convert();
+                double progress = historyResults.get(i).getProgress();
+                double convertedProgress = new DistanceConversion(progress, goalUnits, selectedUnits, view.getContext()).convert();
+
                 datum.put("title", historyResults.get(i).getTitle());
-                datum.put("distance", historyResults.get(i).getDistance() + " " + historyResults.get(i).getUnits());
-                datum.put("progress", Double.toString(historyResults.get(i).getProgress()));
+                datum.put("distance", convertedDistance + " " + selectedUnits);
+                datum.put("progress", convertedProgress + " " + selectedUnits);
                 datum.put("percentage", String.format("%.1f", historyResults.get(i).getPercentage()) + "%");
                 datum.put("date", historyResults.get(i).readableDateFormat());
                 data.add(datum);
@@ -103,6 +124,20 @@ public class Tab_2_Activity extends Fragment {
         viewSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                retrieveGoals();
+                initialiseList();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+        });
+
+        unitsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                selectedUnits = unitsSpinner.getSelectedItem().toString();
                 retrieveGoals();
                 initialiseList();
             }

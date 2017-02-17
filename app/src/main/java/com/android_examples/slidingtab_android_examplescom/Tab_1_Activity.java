@@ -123,6 +123,7 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
                     Context context = host.getApplicationContext();
                     Intent intent = new Intent(context, AddProgressActivity.class);
                     intent.putExtra("id", todaysGoal.getId());
+                    intent.putExtra("units", todaysGoal.getUnits());
                     startActivity(intent);
                 }
             }
@@ -233,9 +234,13 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
         // If there is an existing goal
         if (todaysGoal != null) {
             // Update new goal with current date and transfer progress
+
+            Double convertedDistance = new DistanceConversion(todaysGoal.getProgress(), todaysGoal.getUnits(), GoalContract.GoalDbHelper.getGoalUnits(db, selectedGoalId), view.getContext()).convert();
+//            System.out.println("CONVERTED DISTANCE: " + convertedDistance);
+
             ContentValues cv2 = new ContentValues();
             cv2.put(GoalContract.Goal.COLUMN_NAME_DATE, systemTime);
-            cv2.put(GoalContract.Goal.COLUMN_NAME_PROGRESS, todaysGoal.getProgress()); //TODO will have to convert later
+            cv2.put(GoalContract.Goal.COLUMN_NAME_PROGRESS, convertedDistance);
             db.update(GoalContract.Goal.TABLE_NAME, cv2, "_id=" + selectedGoalId, null);
 
             // Clear progress of existing goal and transfer it to new goal. Update new goal with current date
