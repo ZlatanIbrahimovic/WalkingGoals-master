@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="25dp"
         android:layout_below="@+id/rangeSeekBar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         rsb:absoluteMinValue="20"
         rsb:absoluteMaxValue="150"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="80dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -48,11 +48,61 @@
         android:layout_width="fill_parent"
         android:dividerHeight="1dp"
         android:layout_height="530dp"
-        android:layout_alignTop="@+id/horizontalLine"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/horizontalLine" />
+
+    <com.android_examples.slidingtab_android_examplescom.CustomTextInputLayout
+        android:id="@+id/tilCustom3"
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        app:helperText=""
+        app:helperTextColor="@color/helperTextColour"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="35dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+    <EditText
+        android:layout_height="48dp"
+        android:layout_width="125dp"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/fromDate"
+        android:hint="From"
+        android:layout_marginTop="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    </com.android_examples.slidingtab_android_examplescom.CustomTextInputLayout>
+
+
+    <com.android_examples.slidingtab_android_examplescom.CustomTextInputLayout
+        android:id="@+id/tilCustom4"
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="35dp"
+        app:helperText=""
+        app:helperTextColor="@color/helperTextColour"
+        android:layout_alignTop="@+id/tilCustom3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <EditText
+            android:layout_height="48dp"
+            android:layout_width="125dp"
+            android:inputType="date"
+            android:hint="To"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="55dp"
+            android:ems="10"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/toDate" />
+
+    </com.android_examples.slidingtab_android_examplescom.CustomTextInputLayout>
 
 
 </RelativeLayout>

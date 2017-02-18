@@ -10,14 +10,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
+
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -28,6 +33,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.android_examples.slidingtab_android_examplescom.R.id.fromDate;
+import static com.android_examples.slidingtab_android_examplescom.R.id.toDate;
+
 public class Tab_2_Activity extends Fragment {
 
     private View view;
@@ -37,20 +45,86 @@ public class Tab_2_Activity extends Fragment {
     private ArrayList<GoalsListDisplay> historyResults;
     private long systemTime;
     private String selectedUnits;
+    private ViewGroup container;
+    private LayoutInflater inflater;
+    private EditText dateFrom;
+    private EditText dateTo;
+    private Calendar fromCal;
+    private Calendar toCal;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.container = container;
+        this.inflater = inflater;
+
         final View view =  inflater.inflate(R.layout.activity_tab_2, container, false);
         this.view = view;
 
         populateSpinnerOptions();
         setupSpinnerListeners();
+        initiateEditTextListeners();
         setSelectedUnits();
         setupSeekbar();
         retrieveGoals();
         initialiseList();
 
         return view;
+    }
+
+    /* Initiate listeners for the date editors, displays date picker when selected*/
+    private void initiateEditTextListeners() {
+
+        dateFrom = (EditText) view.findViewById(fromDate);
+        dateFrom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FromDateListener fromDateListener = new FromDateListener(view, (EditText) view.findViewById(fromDate));
+                fromCal = Calendar.getInstance();
+                DatePickerDialog dpd = DatePickerDialog.newInstance(
+                        fromDateListener,
+                        fromCal.get(Calendar.YEAR),
+                        fromCal.get(Calendar.MONTH),
+                        fromCal.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+            }
+        });
+        dateFrom.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                retrieveGoals();
+                initialiseList();
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        dateTo = (EditText) view.findViewById(R.id.toDate);
+        dateTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FromDateListener fromDateListener = new FromDateListener(view, (EditText) view.findViewById(toDate));
+                toCal = Calendar.getInstance();
+                DatePickerDialog dpd = DatePickerDialog.newInstance(
+                        fromDateListener,
+                        toCal.get(Calendar.YEAR),
+                        toCal.get(Calendar.MONTH),
+                        toCal.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+            }
+        });
+        dateTo.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                retrieveGoals();
+                initialiseList();
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
     }
 
     private void setSelectedUnits() {
@@ -113,7 +187,6 @@ public class Tab_2_Activity extends Fragment {
             @Override
             public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
                 retrieveGoals();
-                System.out.println(historyResults.size());
                 initialiseList();
             }
         });
@@ -124,6 +197,25 @@ public class Tab_2_Activity extends Fragment {
         viewSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String selectedView = viewSpinner.getSelectedItem().toString();
+                if (selectedView.equals("Custom range")){
+                    dateFrom.setFocusable(true);
+                    dateFrom.setEnabled(true);
+                    dateFrom.setCursorVisible(true);
+                    dateTo.setFocusable(true);
+                    dateTo.setEnabled(true);
+                    dateTo.setCursorVisible(true);
+                }
+                else{
+                    dateFrom.setFocusable(false);
+                    dateFrom.setEnabled(false);
+                    dateFrom.setCursorVisible(false);
+                    dateTo.setFocusable(false);
+                    dateTo.setEnabled(false);
+                    dateTo.setCursorVisible(false);
+//                    dateFrom.setBackgroundColor(Color.TRANSPARENT);
+
+                }
                 retrieveGoals();
                 initialiseList();
             }
@@ -151,7 +243,7 @@ public class Tab_2_Activity extends Fragment {
 
 
     /*Search database for goals using search criteria (view type and percentage of goal complete) */
-    private void retrieveGoals() {
+    public void retrieveGoals() {
         Context context = getActivity();
         GoalContract.GoalDbHelper mDbHelper = new GoalContract.GoalDbHelper(context);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -195,9 +287,40 @@ public class Tab_2_Activity extends Fragment {
                         results.add(goal);
                     }
                 }
+                else if (historyView.equals("Custom range")){
+                    try {
+                        System.out.println("HELLO");
+                        String fromDate = dateFrom.getText().toString().trim();
+                        Calendar calendarFrom = getCalendarFromDateString(fromDate);
+                        String toDate = dateTo.getText().toString().trim();
+                        Calendar calendarTo = getCalendarFromDateString(toDate);
+
+                        System.out.println("Start " + calendarFrom.getTimeInMillis());
+                        System.out.println("End " + calendarTo.getTimeInMillis());
+
+                        if (DateUtils.isAfterDay(goal.getCalendarDate(), calendarFrom)
+                                && DateUtils.isBeforeDay(goal.getCalendarDate(), calendarTo)){
+                            results.add(goal);
+                        }
+
+                    }
+                    catch(Exception e){
+                        System.out.println(e);
+                    }
+                }
             }
         }
         historyResults = results;
+    }
+
+    public Calendar getCalendarFromDateString(String date){
+        String[] dateSplit = date.split("-");
+        int year = Integer.parseInt(dateSplit[2]);
+        int month = Integer.parseInt(dateSplit[1]) - 1;
+        int day = Integer.parseInt(dateSplit[0]);
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day);
+        return cal;
     }
 
     /*Populate the select view Spinner and select units Spinner with options*/
@@ -237,8 +360,28 @@ public class Tab_2_Activity extends Fragment {
         else{
             systemTime = System.currentTimeMillis();
         }
-
-        System.out.println(systemTime);
     }
 
+
+}
+
+class FromDateListener implements DatePickerDialog.OnDateSetListener {
+
+    private View view;
+    private EditText editText;
+
+    public FromDateListener(View view, EditText editText){
+        this.view = view;
+        this.editText = editText;
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.format(cal.getTime());
+        String displayDate = dateFormat.format(cal.getTime());
+        editText.setText(displayDate);
+    }
 }

@@ -15,10 +15,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Tab_1_Activity"
+        <fragment android:name=".Tab_1_Activity"
             />
-        <activity android:name=".Tab_2_Activity" />
-        <activity android:name=".Tab_3_Activity"></activity>
+        <fragment android:name=".Tab_2_Activity"
+            />
+        <fragment android:name=".Tab_3_Activity"></fragment>
         <activity
             android:name=".AddGoalActivity"
             android:label="@string/addGoalActivityName" >
