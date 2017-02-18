@@ -45,8 +45,6 @@ public class Tab_2_Activity extends Fragment {
     private ArrayList<GoalsListDisplay> historyResults;
     private long systemTime;
     private String selectedUnits;
-    private ViewGroup container;
-    private LayoutInflater inflater;
     private EditText dateFrom;
     private EditText dateTo;
     private Calendar fromCal;
@@ -55,12 +53,8 @@ public class Tab_2_Activity extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.container = container;
-        this.inflater = inflater;
-
         final View view =  inflater.inflate(R.layout.activity_tab_2, container, false);
         this.view = view;
-
         populateSpinnerOptions();
         setupSpinnerListeners();
         initiateEditTextListeners();
@@ -68,58 +62,78 @@ public class Tab_2_Activity extends Fragment {
         setupSeekbar();
         retrieveGoals();
         initialiseList();
-
         return view;
     }
 
-    /* Initiate listeners for the date editors, displays date picker when selected*/
-    private void initiateEditTextListeners() {
 
+    /*
+     * Initiate listeners for the date editors, displays date picker when selected
+     */
+    private void initiateEditTextListeners() {
         dateFrom = (EditText) view.findViewById(fromDate);
         dateFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FromDateListener fromDateListener = new FromDateListener(view, (EditText) view.findViewById(fromDate));
-                fromCal = Calendar.getInstance();
+                if (fromCal == null){
+                    fromCal = Calendar.getInstance();
+                }
                 DatePickerDialog dpd = DatePickerDialog.newInstance(
                         fromDateListener,
                         fromCal.get(Calendar.YEAR),
                         fromCal.get(Calendar.MONTH),
                         fromCal.get(Calendar.DAY_OF_MONTH)
                 );
+                // Disable dates after the selected To Date
+                if (toCal != null) {
+                    dpd.setMaxDate(toCal);
+                }
                 dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
             }
         });
         dateFrom.addTextChangedListener(new TextWatcher() {
-
             public void afterTextChanged(Editable s) {
+                // Update results when date is selected from DatePicker
                 retrieveGoals();
                 initialiseList();
+                // Update fromCal Calendar
+                String fromDate = dateFrom.getText().toString().trim();
+                fromCal = getCalendarFromDateString(fromDate);
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
+
 
         dateTo = (EditText) view.findViewById(R.id.toDate);
         dateTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FromDateListener fromDateListener = new FromDateListener(view, (EditText) view.findViewById(toDate));
-                toCal = Calendar.getInstance();
+                if (toCal == null){
+                    toCal = Calendar.getInstance();
+                }
                 DatePickerDialog dpd = DatePickerDialog.newInstance(
                         fromDateListener,
                         toCal.get(Calendar.YEAR),
                         toCal.get(Calendar.MONTH),
                         toCal.get(Calendar.DAY_OF_MONTH)
                 );
+                // Disable dates before the selected From Date
+                if (fromCal != null) {
+                    dpd.setMinDate(fromCal);
+                }
                 dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
             }
         });
         dateTo.addTextChangedListener(new TextWatcher() {
-
             public void afterTextChanged(Editable s) {
+                // Update results when date is selected from DatePicker
                 retrieveGoals();
                 initialiseList();
+                // Update toCal Calendar
+                String toDate = dateTo.getText().toString().trim();
+                toCal = getCalendarFromDateString(toDate);
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -127,6 +141,10 @@ public class Tab_2_Activity extends Fragment {
 
     }
 
+
+    /*
+     * Set selectedUnits to the current value in the units spinner
+     */
     private void setSelectedUnits() {
         selectedUnits = unitsSpinner.getSelectedItem().toString();
     }
@@ -150,6 +168,9 @@ public class Tab_2_Activity extends Fragment {
     }
 
 
+    /*
+     * Display the results from the query in the ListView
+     */
     private void initialiseList() {
         ListView listView = (ListView) view.findViewById(R.id.historyList);
         ArrayList<Map<String, String>> data = new ArrayList<Map<String, String>>();
@@ -180,6 +201,10 @@ public class Tab_2_Activity extends Fragment {
         listView.setAdapter(adapter);
     }
 
+
+    /*
+     * Initialise seekbar, used to get a range of percentage
+     */
     private void setupSeekbar() {
         rangeSeekBar = (RangeSeekBar) view.findViewById(R.id.rangeSeekBar);
         rangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
@@ -192,13 +217,17 @@ public class Tab_2_Activity extends Fragment {
         });
     }
 
-    /*Set up the view and units spinners with listeners*/
+
+    /*
+     * Set up the view and units spinners with listeners
+     */
     private void setupSpinnerListeners() {
         viewSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String selectedView = viewSpinner.getSelectedItem().toString();
                 if (selectedView.equals("Custom range")){
+                    // Disable input and grey out the dateFrom and dateTo TextEdit fields
                     dateFrom.setFocusable(true);
                     dateFrom.setEnabled(true);
                     dateFrom.setCursorVisible(true);
@@ -207,6 +236,7 @@ public class Tab_2_Activity extends Fragment {
                     dateTo.setCursorVisible(true);
                 }
                 else{
+                    // Enable input for the dateFrom and dateTo TextEdit fields
                     dateFrom.setFocusable(false);
                     dateFrom.setEnabled(false);
                     dateFrom.setCursorVisible(false);
@@ -222,7 +252,6 @@ public class Tab_2_Activity extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
             }
         });
 
@@ -236,13 +265,14 @@ public class Tab_2_Activity extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
             }
         });
     }
 
 
-    /*Search database for goals using search criteria (view type and percentage of goal complete) */
+    /*
+     * Search database for goals using search criteria (view type and percentage of goal complete)
+     */
     public void retrieveGoals() {
         Context context = getActivity();
         GoalContract.GoalDbHelper mDbHelper = new GoalContract.GoalDbHelper(context);
@@ -313,6 +343,7 @@ public class Tab_2_Activity extends Fragment {
         historyResults = results;
     }
 
+
     public Calendar getCalendarFromDateString(String date){
         String[] dateSplit = date.split("-");
         int year = Integer.parseInt(dateSplit[2]);
@@ -323,7 +354,10 @@ public class Tab_2_Activity extends Fragment {
         return cal;
     }
 
-    /*Populate the select view Spinner and select units Spinner with options*/
+
+    /*
+     * Populate the select view Spinner and select units Spinner with options
+     */
     private void populateSpinnerOptions() {
         // Populate Select View Spinner
         viewSpinner = (Spinner) view.findViewById(R.id.historyViewSelector);
@@ -343,13 +377,13 @@ public class Tab_2_Activity extends Fragment {
 
     private void setSystemTime() {
         systemTime = -2;
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-
+        // If testmode is on in preferences
         if (prefs.getBoolean("testMode", false)){
             Calendar cal = Calendar.getInstance();
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             try {
+                // Set systemtime to the testmode date that is set in preferences
                 Date dates = formatter.parse(prefs.getString("keyname",null));
                 cal.setTime(dates);
                 cal.add(Calendar.MONTH, 1);
@@ -358,11 +392,10 @@ public class Tab_2_Activity extends Fragment {
 
         }
         else{
+            // If testmode is off, use the device time
             systemTime = System.currentTimeMillis();
         }
     }
-
-
 }
 
 class FromDateListener implements DatePickerDialog.OnDateSetListener {
