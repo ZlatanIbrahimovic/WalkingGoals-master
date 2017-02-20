@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 
@@ -173,6 +174,7 @@ public class Tab_2_Activity extends Fragment {
      */
     private void initialiseList() {
         ListView listView = (ListView) view.findViewById(R.id.historyList);
+        listView.setSelector(android.R.color.transparent);
         ArrayList<Map<String, String>> data = new ArrayList<Map<String, String>>();
 
         if(historyResults != null){
@@ -189,6 +191,7 @@ public class Tab_2_Activity extends Fragment {
                 datum.put("progress", convertedProgress + " " + selectedUnits);
                 datum.put("percentage", String.format("%.1f", historyResults.get(i).getPercentage()) + "%");
                 datum.put("date", historyResults.get(i).readableDateFormat());
+                datum.put("percentageBarValue",  String.valueOf((int) historyResults.get(i).getPercentage()));
                 data.add(datum);
             }
         }
@@ -197,7 +200,18 @@ public class Tab_2_Activity extends Fragment {
             data.add(datum);
         }
         
-        SimpleAdapter adapter = new SimpleAdapter(view.getContext(), data, R.layout.history_row_layout, new String[]{"title", "distance", "progress", "percentage", "date"}, new int[]{R.id.title, R.id.distance, R.id.progress, R.id.percent, R.id.date});
+        SimpleAdapter adapter = new SimpleAdapter(view.getContext(), data, R.layout.history_row_layout, new String[]{"title", "distance", "progress", "percentage", "date", "percentageBarValue"}, new int[]{R.id.title, R.id.distance, R.id.progress, R.id.percent, R.id.date, R.id.progressBar});
+        // Update progress bar with correct percentage
+        adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
+            public boolean setViewValue(View view, Object data, String textRepresentation) {
+                if (view.getId() == R.id.progressBar) {
+                    ((ProgressBar) view).setProgress(Integer.parseInt(textRepresentation));
+                    return true;
+                }
+                return false;
+            }
+        });
+
         listView.setAdapter(adapter);
     }
 
@@ -289,7 +303,7 @@ public class Tab_2_Activity extends Fragment {
 
 //        System.out.println(historyView +  "   "  + minPercent +   "    "   + maxPercent);
 
-        ArrayList<GoalsListDisplay> goals = mDbHelper.getAllGoals(db, GoalContract.Goal.TABLE_NAME);
+        ArrayList<GoalsListDisplay> goals = mDbHelper.getAllGoalsDateDescending(db);
         if (goals == null){
             return;
         }

@@ -130,6 +130,32 @@ public final class GoalContract {
             return results;
         }
 
+
+        public ArrayList<GoalsListDisplay> getAllGoalsDateDescending(SQLiteDatabase db) {
+            ArrayList<GoalsListDisplay> results = new ArrayList<GoalsListDisplay>();
+            try {
+                String rawQuery = "Select _id, " + Goal.COLUMN_NAME_TITLE + ", " + Goal.COLUMN_NAME_DISTANCE + " , " + Goal.COLUMN_NAME_UNITS+ ", " + Goal.COLUMN_NAME_PROGRESS + ", " + Goal.COLUMN_NAME_DATE + "  from " + GoalContract.Goal.TABLE_NAME +" order by " + Goal.COLUMN_NAME_DATE + "  desc";
+
+                Cursor c = db.rawQuery(rawQuery, null);
+
+                try {
+
+                    if (!c.moveToFirst())
+                        return null;
+                    do {
+//                        System.out.println("CURSOR  "  +c.getInt(5));
+                        results.add(new GoalsListDisplay(c.getInt(0), c.getString(1),c.getString(2),c.getString(3), c.getInt(4), c.getLong(5)));
+                    } while (c.moveToNext());
+                } finally {
+                    c.close();
+                }
+            } finally {
+                db.close();
+            }
+            return results;
+        }
+
+
     }
 
 
