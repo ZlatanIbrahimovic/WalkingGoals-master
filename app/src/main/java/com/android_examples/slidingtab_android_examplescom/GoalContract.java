@@ -156,6 +156,9 @@ public final class GoalContract {
         }
 
 
+        public void getGoalProgress(SQLiteDatabase db, int id) {
+
+        }
     }
 
 

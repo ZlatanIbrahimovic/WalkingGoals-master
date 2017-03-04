@@ -142,7 +142,7 @@ public class DistanceConversion extends AppCompatActivity {
 
     public void getMetersInStep(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String stepMapping = prefs.getString("stepMapping",null);
+        String stepMapping = prefs.getString("stepMapping","0.762");
         try {
             metersInStep = Double.parseDouble(stepMapping);
         } catch (NumberFormatException e) {

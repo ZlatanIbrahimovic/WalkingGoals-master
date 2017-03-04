@@ -1,14 +1,23 @@
 package com.android_examples.slidingtab_android_examplescom;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +30,7 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -94,6 +104,7 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
             @Override
             public void run() {
                 TextView goalExpired = (TextView) view.findViewById(R.id.goalExpired);
+                checkGoalReached();
                 if (todaysGoal != null) {
                     Calendar cal = Calendar.getInstance();
                     cal.setTimeInMillis(systemTime);
@@ -110,6 +121,45 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
             }
         };
         timer.scheduleAtFixedRate(t,1000,1000);
+    }
+
+    private void checkGoalReached() {
+        if(todaysGoal != null) {
+            if (todaysGoal.getProgress() >= Double.valueOf(todaysGoal.getDistance())) {
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(getContext())
+                                .setSmallIcon(R.drawable.notification_icon)
+                                .setContentTitle("Daily goal reached")
+                                .setContentText(todaysGoal.getTitle() + ". " + todaysGoal.getDistance() + " " + todaysGoal.getUnits() + " walked.");
+                // Creates an explicit intent for an Activity in your app
+                Intent resultIntent = new Intent(getContext(), Tab_1_Activity.class);
+                // The stack builder object will contain an artificial back stack for the
+                // started Activity.
+                // This ensures that navigating backward from the Activity leads out of
+                // your application to the Home screen.
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
+                // Adds the back stack for the Intent (but not the Intent itself)
+                stackBuilder.addParentStack(getActivity());
+                // Adds the Intent that starts the Activity to the top of the stack
+                stackBuilder.addNextIntent(resultIntent);
+                PendingIntent resultPendingIntent =
+                        stackBuilder.getPendingIntent(
+                                0,
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                        );
+                mBuilder.setContentIntent(resultPendingIntent);
+                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                mBuilder.setSound(alarmSound);
+                mBuilder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+                mBuilder.setLights(Color.RED, 3000, 3000);
+
+                NotificationManager mNotificationManager =
+                        (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                // mId allows you to update the notification later on.
+                int mId = 0;
+                mNotificationManager.notify(mId, mBuilder.build());
+            }
+        }
     }
 
 
@@ -191,6 +241,17 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
         PopupMenu popup = new PopupMenu(getContext(), v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.popup_menu, popup.getMenu());
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        boolean goalsEditable = prefs.getBoolean("editGoals", true);
+
+        if (!goalsEditable){
+            popup.getMenu().findItem(R.id.edit).setEnabled(false);
+        }
+        else{
+            popup.getMenu().findItem(R.id.edit).setEnabled(true);
+        }
+
         popup.show();
         popup.setOnMenuItemClickListener(this);
     }
@@ -205,7 +266,15 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
                 editGoal();
                 return true;
             case R.id.delete:
-                deleteGoal();
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete goal?")
+                        .setMessage("This goal will disappear from the 'Other Goals' section.")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                deleteGoal();
+                            }})
+                        .setNegativeButton(android.R.string.no, null).show();
                 return true;
             default: return false;
         }
@@ -315,6 +384,7 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
         db.delete("goal", "_id=?", new String[]{selectedGoalId});
         retrieveGoals();
         initialiseList();
+        Toast.makeText(getContext(), "Goal deleted", Toast.LENGTH_SHORT).show();
     }
 
 
