@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
@@ -30,7 +31,10 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.github.johnpersano.supertoasts.SuperActivityToast;
+import com.github.johnpersano.supertoasts.SuperToast;
+import com.github.johnpersano.supertoasts.util.OnClickWrapper;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -43,6 +47,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static com.android_examples.slidingtab_android_examplescom.GoalContract.GoalDbHelper.getGoalById;
 
 public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClickListener{
 
@@ -265,7 +271,7 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
             case R.id.edit:
                 editGoal();
                 return true;
-            case R.id.delete:
+            case R.id.delete: //http://stackoverflow.com/questions/5127407/how-to-implement-a-confirmation-yes-no-dialogpreference
                 new AlertDialog.Builder(getContext())
                         .setTitle("Delete goal?")
                         .setMessage("This goal will disappear from the 'Other Goals' section.")
@@ -377,14 +383,36 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
 
 
     private void deleteGoal() {
+
         Context context = getActivity();
         GoalContract.GoalDbHelper mDbHelper = new GoalContract.GoalDbHelper(context);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         String selectedGoalId = Integer.toString(goals.get(selectionIndex).getId());
+
+        GoalsListDisplay goalToDelete = getGoalById(db, Integer.parseInt(selectedGoalId));
+        System.out.println(goalToDelete.toString());
+        ContentValues goalToDeleteValues = new ContentValues();
+        goalToDeleteValues.put(GoalContract.Goal.COLUMN_NAME_TITLE, goalToDelete.getTitle());
+        goalToDeleteValues.put(GoalContract.Goal.COLUMN_NAME_DISTANCE, goalToDelete.getDistance());
+        goalToDeleteValues.put(GoalContract.Goal.COLUMN_NAME_UNITS, goalToDelete.getUnits());
+        goalToDeleteValues.put(GoalContract.Goal.COLUMN_NAME_PROGRESS, goalToDelete.getProgress());
+        goalToDeleteValues.put(GoalContract.Goal.COLUMN_NAME_DATE, goalToDelete.getDate());
+
+        db = mDbHelper.getWritableDatabase();
         db.delete("goal", "_id=?", new String[]{selectedGoalId});
         retrieveGoals();
         initialiseList();
-        Toast.makeText(getContext(), "Goal deleted", Toast.LENGTH_SHORT).show();
+
+        undoDelete undoDelete = new undoDelete(view, goalToDeleteValues, Tab_1_Activity.this);
+        OnClickWrapper onClickWrapper = new OnClickWrapper("superactivitytoast", undoDelete);
+
+        SuperActivityToast superActivityToast = new SuperActivityToast(getActivity(), SuperToast.Type.BUTTON);
+        superActivityToast.setDuration(SuperToast.Duration.EXTRA_LONG);
+        superActivityToast.setText("Goal Deleted");
+        superActivityToast.setButtonIcon(SuperToast.Icon.Dark.UNDO, "UNDO");
+        superActivityToast.setOnClickWrapper(onClickWrapper);
+        superActivityToast.show();
+
     }
 
 
@@ -421,5 +449,28 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
         this.goals = goals;
     }
 
+}
 
+class undoDelete implements SuperToast.OnClickListener{
+
+    private View view;
+    private ContentValues values;
+    private Tab_1_Activity tab_1_activity;
+
+    public undoDelete(View view, ContentValues values, Tab_1_Activity tab_1_activity){
+        this.view = view;
+        this.values = values;
+        this.tab_1_activity = tab_1_activity;
+    }
+
+    @Override
+    public void onClick(View view, Parcelable parcelable) {
+        Context context = view.getContext();
+        GoalContract.GoalDbHelper mDbHelper = new GoalContract.GoalDbHelper(context);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        db.insert(GoalContract.Goal.TABLE_NAME, null, values);
+        System.out.println("THIS HAS BEEN CLICKED");
+        tab_1_activity.retrieveGoals();
+        tab_1_activity.initialiseList();
+    }
 }
