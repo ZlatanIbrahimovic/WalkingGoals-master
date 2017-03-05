@@ -48,6 +48,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.app.Activity.RESULT_OK;
 import static com.android_examples.slidingtab_android_examplescom.GoalContract.GoalDbHelper.getGoalById;
 
 public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClickListener{
@@ -180,10 +181,37 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
                     Intent intent = new Intent(context, AddProgressActivity.class);
                     intent.putExtra("id", todaysGoal.getId());
                     intent.putExtra("units", todaysGoal.getUnits());
-                    startActivity(intent);
+//                    startActivity(intent);
+                    startActivityForResult(intent,0);
                 }
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        //Do your work here in ActivityA
+
+        if(resultCode==RESULT_OK){
+            Bundle MBuddle = data.getExtras();
+            String progressAdded = MBuddle.getString("progressAdded");
+            String id = MBuddle.getString("id");
+            System.out.println("BACK IN TAB_1_ACTIVITY" + progressAdded);
+            System.out.println("BACK IN TAB_1_ACTIVITY" + id);
+
+            UndoProgress undoProgress = new UndoProgress(view, id, progressAdded, Tab_1_Activity.this);
+            OnClickWrapper onClickWrapper = new OnClickWrapper("superactivitytoast", undoProgress);
+
+            SuperActivityToast superActivityToast = new SuperActivityToast(getActivity(), SuperToast.Type.BUTTON);
+            superActivityToast.setDuration(SuperToast.Duration.EXTRA_LONG);
+            superActivityToast.setText("Progress added");
+            superActivityToast.setButtonIcon(SuperToast.Icon.Dark.UNDO, "UNDO");
+            superActivityToast.setOnClickWrapper(onClickWrapper);
+            superActivityToast.show();
+        }
+
     }
 
 
@@ -469,8 +497,34 @@ class undoDelete implements SuperToast.OnClickListener{
         GoalContract.GoalDbHelper mDbHelper = new GoalContract.GoalDbHelper(context);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         db.insert(GoalContract.Goal.TABLE_NAME, null, values);
-        System.out.println("THIS HAS BEEN CLICKED");
         tab_1_activity.retrieveGoals();
         tab_1_activity.initialiseList();
+    }
+}
+
+class UndoProgress implements SuperToast.OnClickListener{
+
+    private View view;
+    private double negatedProgress;
+    private int id;
+    private Tab_1_Activity tab_1_activity;
+
+    public UndoProgress(View view, String id, String progressAdded, Tab_1_Activity tab_1_activity) {
+        this.view = view;
+        this.id = Integer.valueOf(id);
+        this.negatedProgress = Double.valueOf(progressAdded) * -1.0;
+        this.tab_1_activity = tab_1_activity;
+    }
+
+    @Override
+    public void onClick(View view, Parcelable parcelable) {
+        Context context = view.getContext();
+        GoalContract.GoalDbHelper mDbHelper = new GoalContract.GoalDbHelper(context);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        mDbHelper.increaseProgress(db, id, negatedProgress);
+        tab_1_activity.retrieveGoals();
+        tab_1_activity.initialiseList();
+        tab_1_activity.retreiveTodaysGoal();
+        tab_1_activity.displayTodaysGoal();
     }
 }

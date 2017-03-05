@@ -5,6 +5,7 @@ package com.android_examples.slidingtab_android_examplescom;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -74,6 +75,11 @@ public class AddProgressActivity extends AppCompatActivity implements View.OnCli
 
             mDbHelper.increaseProgress(db, getIntent().getIntExtra("id", 0), convertedDistance);
 
+            String id = String.valueOf(getIntent().getIntExtra("id", 0));
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("progressAdded", String.valueOf(convertedDistance));
+            returnIntent.putExtra("id", id);
+            setResult(RESULT_OK,returnIntent);
             finish();
         }
     }

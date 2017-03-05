@@ -72,11 +72,6 @@ public class AddGoalActivity extends AppCompatActivity implements View.OnClickLi
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         if (titleValid && distanceValid){
-            CharSequence text = "Hello toast!";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
             String title = addGoalTitle.getText().toString().trim();
             Double distance = Double.parseDouble(addGoalDistance.getText().toString().trim());
             Spinner addGoalUnitSelector = (Spinner) findViewById(R.id.addGoalUnitSelector);
@@ -91,7 +86,11 @@ public class AddGoalActivity extends AppCompatActivity implements View.OnClickLi
             values.put(GoalContract.Goal.COLUMN_NAME_DATE, -1);
 
             // Insert the new row, returning the primary key value of the new row
-            long newRowId = db.insert(GoalContract.Goal.TABLE_NAME, null, values);
+            db.insert(GoalContract.Goal.TABLE_NAME, null, values);
+
+            Toast toast = Toast.makeText(context, "Goal added", Toast.LENGTH_SHORT);
+            toast.show();
+
             finish();
         }
     }
