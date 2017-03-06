@@ -27,11 +27,13 @@
         android:layout_marginTop="100dp"
         android:layout_below="@+id/toolbar1"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/addGoalUnitSelector"
+        android:layout_toStartOf="@+id/addGoalUnitSelector">
 
         <EditText
             android:id="@+id/addGoalDistance"
-            android:layout_width="100dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Distance"
             android:textSize="18sp"
@@ -52,7 +54,7 @@
 
         <EditText
             android:id="@+id/addGoalTitle"
-            android:layout_width="match_parent"
+            android:layout_width="395dp"
             android:layout_height="wrap_content"
             android:hint="Title"
             android:textSize="24sp" />
@@ -63,20 +65,23 @@
         android:layout_width="150dp"
         android:id="@+id/addGoalUnitSelector"
         android:layout_height="48dp"
-        android:layout_toLeftOf="@+id/save"
-        android:layout_toStartOf="@+id/save"
-        android:layout_alignBottom="@+id/tilCustom3" />
+        android:maxLength="6"
+        android:layout_marginTop="160dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="14dp"
+        android:layout_marginEnd="14dp" />
 
     <Button
-        android:text="Save"
+        android:text="Done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/save"
-        android:layout_marginRight="31dp"
-        android:layout_marginEnd="31dp"
-        android:layout_below="@+id/tilCustom3"
-        android:layout_alignRight="@+id/tilCustom4"
-        android:layout_alignEnd="@+id/tilCustom4" />
+        android:layout_marginRight="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="230dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>

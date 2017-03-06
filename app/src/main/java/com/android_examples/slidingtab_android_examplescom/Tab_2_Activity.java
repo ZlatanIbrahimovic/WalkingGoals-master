@@ -182,16 +182,23 @@ public class Tab_2_Activity extends Fragment {
                 Map<String, String> datum = new HashMap<String, String>(2);
                 String goalUnits = historyResults.get(i).getUnits();
                 double distance = Double.parseDouble(historyResults.get(i).getDistance());
-                double convertedDistance = new DistanceConversion(distance, goalUnits, selectedUnits, view.getContext()).convert();
                 double progress = historyResults.get(i).getProgress();
-                double convertedProgress = new DistanceConversion(progress, goalUnits, selectedUnits, view.getContext()).convert();
 
                 datum.put("title", historyResults.get(i).getTitle());
-                datum.put("distance", convertedDistance + " " + selectedUnits);
-                datum.put("progress", convertedProgress + " " + selectedUnits);
                 datum.put("percentage", String.format("%.1f", historyResults.get(i).getPercentage()) + "%");
                 datum.put("date", historyResults.get(i).readableDateFormat());
-                datum.put("percentageBarValue",  String.valueOf((int) historyResults.get(i).getPercentage()));
+                datum.put("percentageBarValue", String.valueOf((int) historyResults.get(i).getPercentage()));
+
+                if (selectedUnits.equals("Original units")){
+                    datum.put("distance", distance + " " + goalUnits);
+                    datum.put("progress", progress + " " + goalUnits);
+                }
+                else {
+                    double convertedDistance = new DistanceConversion(distance, goalUnits, selectedUnits, view.getContext()).convert();
+                    double convertedProgress = new DistanceConversion(progress, goalUnits, selectedUnits, view.getContext()).convert();
+                    datum.put("distance", convertedDistance + " " + selectedUnits);
+                    datum.put("progress", convertedProgress + " " + selectedUnits);
+                }
                 data.add(datum);
             }
         }
@@ -383,7 +390,7 @@ public class Tab_2_Activity extends Fragment {
         // Populate Select Unit Spinner
         unitsSpinner = (Spinner) view.findViewById(R.id.historyUnitSelector);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getActivity().getBaseContext(),
-                R.array.units_array, android.R.layout.simple_spinner_item);
+                R.array.history_statistics_units_array, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         unitsSpinner.setAdapter(arrayAdapter);
     }

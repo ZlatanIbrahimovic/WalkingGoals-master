@@ -76,7 +76,6 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
         retreiveTodaysGoal();
         displayTodaysGoal();
         initialiseTimer();
-
         return view;
     }
 
@@ -111,7 +110,6 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
             @Override
             public void run() {
                 TextView goalExpired = (TextView) view.findViewById(R.id.goalExpired);
-                checkGoalReached();
                 if (todaysGoal != null) {
                     Calendar cal = Calendar.getInstance();
                     cal.setTimeInMillis(systemTime);
@@ -132,39 +130,44 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
 
     private void checkGoalReached() {
         if(todaysGoal != null) {
-            if (todaysGoal.getProgress() >= Double.valueOf(todaysGoal.getDistance())) {
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(getContext())
-                                .setSmallIcon(R.drawable.notification_icon)
-                                .setContentTitle("Daily goal reached")
-                                .setContentText(todaysGoal.getTitle() + ". " + todaysGoal.getDistance() + " " + todaysGoal.getUnits() + " walked.");
-                // Creates an explicit intent for an Activity in your app
-                Intent resultIntent = new Intent(getContext(), Tab_1_Activity.class);
-                // The stack builder object will contain an artificial back stack for the
-                // started Activity.
-                // This ensures that navigating backward from the Activity leads out of
-                // your application to the Home screen.
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
-                // Adds the back stack for the Intent (but not the Intent itself)
-                stackBuilder.addParentStack(getActivity());
-                // Adds the Intent that starts the Activity to the top of the stack
-                stackBuilder.addNextIntent(resultIntent);
-                PendingIntent resultPendingIntent =
-                        stackBuilder.getPendingIntent(
-                                0,
-                                PendingIntent.FLAG_UPDATE_CURRENT
-                        );
-                mBuilder.setContentIntent(resultPendingIntent);
-                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                mBuilder.setSound(alarmSound);
-                mBuilder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
-                mBuilder.setLights(Color.RED, 3000, 3000);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-                NotificationManager mNotificationManager =
-                        (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                // mId allows you to update the notification later on.
-                int mId = 0;
-                mNotificationManager.notify(mId, mBuilder.build());
+            if (prefs.getBoolean("notifications", false)) {
+
+                if (todaysGoal.getProgress() >= Double.valueOf(todaysGoal.getDistance())) {
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(getContext())
+                                    .setSmallIcon(R.drawable.notification_icon)
+                                    .setContentTitle("Daily goal reached")
+                                    .setContentText(todaysGoal.getTitle() + ". " + todaysGoal.getDistance() + " " + todaysGoal.getUnits() + " walked.");
+                    // Creates an explicit intent for an Activity in your app
+                    Intent resultIntent = new Intent(getContext(), Tab_1_Activity.class);
+                    // The stack builder object will contain an artificial back stack for the
+                    // started Activity.
+                    // This ensures that navigating backward from the Activity leads out of
+                    // your application to the Home screen.
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
+                    // Adds the back stack for the Intent (but not the Intent itself)
+                    stackBuilder.addParentStack(getActivity());
+                    // Adds the Intent that starts the Activity to the top of the stack
+                    stackBuilder.addNextIntent(resultIntent);
+                    PendingIntent resultPendingIntent =
+                            stackBuilder.getPendingIntent(
+                                    0,
+                                    PendingIntent.FLAG_UPDATE_CURRENT
+                            );
+                    mBuilder.setContentIntent(resultPendingIntent);
+                    Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    mBuilder.setSound(alarmSound);
+                    mBuilder.setVibrate(new long[]{100, 200, 100, 500});
+                    mBuilder.setLights(Color.RED, 3000, 3000);
+
+                    NotificationManager mNotificationManager =
+                            (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                    // mId allows you to update the notification later on.
+                    int mId = 0;
+                    mNotificationManager.notify(mId, mBuilder.build());
+                }
             }
         }
     }
@@ -210,6 +213,15 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
             superActivityToast.setButtonIcon(SuperToast.Icon.Dark.UNDO, "UNDO");
             superActivityToast.setOnClickWrapper(onClickWrapper);
             superActivityToast.show();
+
+            setSystemTime();
+            retrieveGoals();
+            initialiseList();
+            retreiveTodaysGoal();
+            if (todaysGoal != null) {
+                displayTodaysGoal();
+                checkGoalReached();
+            }
         }
 
     }

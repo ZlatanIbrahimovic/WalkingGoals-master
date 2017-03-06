@@ -80,10 +80,6 @@ public class EditGoalActivity extends AppCompatActivity implements View.OnClickL
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         if (titleValid && distanceValid){
-            CharSequence text = "Hello toast!";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
 
             String title = addGoalTitle.getText().toString().trim();
             Double distance = Double.parseDouble(addGoalDistance.getText().toString().trim());
@@ -105,6 +101,11 @@ public class EditGoalActivity extends AppCompatActivity implements View.OnClickL
             cv.put(GoalContract.Goal.COLUMN_NAME_UNITS,units);
             db.update(GoalContract.Goal.TABLE_NAME, cv, "_id="+getIntent().getIntExtra("id", 0), null);
 
+            CharSequence text = "Goal edited";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+            finish();
         }
     }
 

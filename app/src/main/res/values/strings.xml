@@ -23,6 +23,15 @@
         <item>Steps</item>
     </string-array>
 
+    <string-array name="history_statistics_units_array">
+        <item>Original units</item>
+        <item>Meters</item>
+        <item>Kilometers</item>
+        <item>Yards</item>
+        <item>Feet</item>
+        <item>Steps</item>
+    </string-array>
+
     <!--Goals popup Menu options-->
     <string name="popupSetGoalOption">Set as today\'s goal</string>
     <string name="popupEditOption">Edit</string>
