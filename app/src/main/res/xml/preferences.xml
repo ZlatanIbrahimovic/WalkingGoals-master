@@ -10,6 +10,9 @@
         android:key="notifications"
         android:title="@string/notificationsTitle" />
 
+    <SwitchPreference
+        android:key="stepCounter"
+        android:title="@string/stepCounterTitle" />
 
     <SwitchPreference
         android:key="testMode"

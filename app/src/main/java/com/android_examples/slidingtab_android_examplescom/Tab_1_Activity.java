@@ -79,7 +79,6 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
         return view;
     }
 
-
     private void setSystemTime() {
         systemTime = -2;
 
@@ -113,13 +112,20 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
                 if (todaysGoal != null) {
                     Calendar cal = Calendar.getInstance();
                     cal.setTimeInMillis(systemTime);
+
+//                    this.runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            retrieveGoals();
+//                            retreiveTodaysGoal();
+//                            displayTodaysGoal();
+//                        }
+//                    });
+
                     if (DateUtils.isSameDay(cal, todaysGoal.getCalendarDate())) {
-//                        System.out.println("1");
                         goalExpired.setVisibility(View.GONE);
                     }
                     else{
-//                        System.out.println("2");
-//                        goalExpired.setVisibility(View.VISIBLE);
                         todaysGoal = null;
                     }
                 }
@@ -346,6 +352,7 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         setSystemTime();
+
         // If there is an existing goal
         if (todaysGoal != null) {
             // Update new goal with current date and transfer progress
@@ -383,14 +390,17 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
         systemDateCalendar.setTimeInMillis(systemTime);
         if (goals != null) {
             for (GoalsListDisplay goal : goals) {
-                System.out.println(goal.getDate());
+//                System.out.println(goal.getDate());
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(goal.getDate());
 //                System.out.println("Goal Time " + goal.getTitle() + "     :" + goal.getDate());
 //                if (DateUtils.isToday(calendar)) {
                     if (DateUtils.isSameDay(calendar,systemDateCalendar)) {
-                    todaysGoal = goal;
-                    System.out.println(todaysGoal.getId());
+                        todaysGoal = goal;
+                        System.out.println(todaysGoal.getId());
+                        Globals g = (Globals) getActivity().getApplication();
+                        g.setCurrentGoalId(todaysGoal.getId());
+                        g.setCurrentGoalUnits(todaysGoal.getUnits());
                 }
             }
         }
@@ -420,7 +430,6 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
             goalProgressBar.setProgress((int) todaysGoal.getPercentage());
         }
     }
-
 
     private void deleteGoal() {
 

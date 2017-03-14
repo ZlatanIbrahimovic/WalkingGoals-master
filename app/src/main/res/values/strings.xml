@@ -59,6 +59,9 @@
 
     <string name="notificationsTitle">Notifications</string>
 
+
+    <string name="stepCounterTitle">Step counter</string>
+
     <string name="testModeTitle">Test mode</string>
     <string name="testModeDate">Test mode date</string>
     <string name="testModeDateSummary">Specify current date for the app</string>

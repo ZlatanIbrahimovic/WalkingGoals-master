@@ -2,8 +2,15 @@ package com.android_examples.slidingtab_android_examplescom;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Rect;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,16 +22,25 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     Toolbar toolbar ;
     TabLayout tabLayout ;
     ViewPager viewPager ;
     FragmentAdapterClass fragmentAdapter ;
+    private SensorManager sensorManager;
+    private TextView count;
+    boolean activityRunning;
+    private float stepsWalked;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         setContentView(R.layout.activity_main);
 
@@ -92,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.settings:
                 //Toast.makeText(this, "ADD!", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(this, SettingsActivity.class);
+                Intent i = new Intent(this, Settings.class);
                 startActivity(i);
                 return true;
             default:
@@ -115,6 +131,61 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return super.dispatchTouchEvent( event );
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        activityRunning = true;
+        Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        if (countSensor != null) {
+            sensorManager.registerListener(this, countSensor, SensorManager.SENSOR_DELAY_UI);
+        } else {
+            Toast.makeText(this, "Count sensor not available!", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        activityRunning = false;
+        // if you unregister the last listener, the hardware will stop detecting step events
+//        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // If testmode is on in preferences
+        if (prefs.getBoolean("stepCounter", false)){
+            System.out.println("Step counter is on");
+            Globals g = (Globals)getApplication();
+            int currentGoalId =g.getCurrentGoalId();
+            String currentGoalUnits =g.getCurrentGoalUnits();
+
+            System.out.println("Walkingggggg");
+
+            System.out.println(String.valueOf(event.values[0]));
+            stepsWalked = event.values[0];
+
+            GoalContract.GoalDbHelper mDbHelper = new GoalContract.GoalDbHelper(this);
+            SQLiteDatabase db = mDbHelper.getWritableDatabase();
+            Double convertedDistance = new DistanceConversion(1.0, "Steps", currentGoalUnits, getApplicationContext()).convert();
+            mDbHelper.increaseProgress(db, currentGoalId, convertedDistance);
+
+        }
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    public float getStepsWalked(){
+        return stepsWalked;
     }
 
 }
