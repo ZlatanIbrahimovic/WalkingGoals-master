@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="horizontal">
+
+	<include layout="@layout/ab_donebar_cancel" />
+
+	<TextView
+		android:layout_width="200dp"
+		android:text=""
+		android:textColor="#FFFFFF"
+		android:layout_height="match_parent"
+		android:layout_marginTop="@dimen/ab_donebar_divider_padding"
+		android:layout_marginBottom="@dimen/ab_donebar_divider_padding"
+		android:id="@+id/toolbarText"
+		android:textSize="20sp" />
+
+	<include layout="@layout/ab_donebar_done" />
+
+</LinearLayout>

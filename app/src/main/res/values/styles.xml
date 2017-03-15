@@ -19,4 +19,17 @@
         <item name="android:background">@android:color/white</item>
     </style>
 
+
+    <style name="TextAppearance.Example.Button" parent="@style/TextAppearance.AppCompat.Button">
+        <item name="android:textSize">@dimen/global_text_size_button</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="Widget.Example.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
 </resources>

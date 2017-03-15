@@ -78,4 +78,8 @@
 
     <string name="clearHistoryTitle">Clear goal history</string>
 
+
+    <string name="global_button_done">Done</string>
+    <string name="global_button_cancel">Cancel</string>
+
 </resources>

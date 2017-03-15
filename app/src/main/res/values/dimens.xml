@@ -2,4 +2,10 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+
+    <dimen name="ab_donebar_divider">1dp</dimen>
+    <dimen name="ab_donebar_divider_padding">12dp</dimen>
+    <dimen name="global_spacing_8">8dp</dimen>
+    <dimen name="global_text_size_button">14sp</dimen>
 </resources>

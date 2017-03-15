@@ -8,20 +8,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
-public class AddProgressActivity extends AppCompatActivity implements View.OnClickListener{
+public class AddProgressActivity extends AppCompatActivity{
 
-    Toolbar toolbar ;
-    private Button btnDone;
     private EditText addGoalDistance;
     private CustomTextInputLayout helperTextDistance;
     private boolean distanceValid;
@@ -29,16 +30,12 @@ public class AddProgressActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        toolbar = (Toolbar) findViewById(R.id.toolbar1);
         distanceValid = false;
-        setSupportActionBar(toolbar);
         setContentView(R.layout.add_progress_activity);
 
+        setupActionBar();
         initialiseSpinner();
         initialiseDistanceInput();
-
-        btnDone = (Button) findViewById(R.id.save);
-        btnDone.setOnClickListener(this);
     }
 
     private void initialiseDistanceInput() {
@@ -56,8 +53,7 @@ public class AddProgressActivity extends AppCompatActivity implements View.OnCli
     }
 
 
-    @Override
-    public void onClick(View v) {
+    public void doneClick() {
         Context context = getApplicationContext();
         GoalContract.GoalDbHelper mDbHelper = new GoalContract.GoalDbHelper(context);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -116,5 +112,42 @@ public class AddProgressActivity extends AppCompatActivity implements View.OnCli
             }
         }
     };
+
+    private void setupActionBar()
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setContentInsetsRelative(0, 0);
+        setSupportActionBar(toolbar);
+
+        ActionBar bar = getSupportActionBar();
+
+        // custom view
+        LayoutInflater inflater = (LayoutInflater) bar.getThemedContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.ab_donebar, null);
+
+        TextView toolbarText = (TextView) customView.findViewById(R.id.toolbarText);
+        toolbarText.setText("Add progress");
+
+        customView.findViewById(R.id.ab_donebar_done).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                doneClick();
+            }
+        });
+        customView.findViewById(R.id.ab_donebar_cancel).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+
+        // setup action bar
+        bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
+        bar.setCustomView(customView, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    }
 
 }

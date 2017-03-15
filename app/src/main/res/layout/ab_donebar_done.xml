@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/ab_donebar_done"
+	android:layout_width="0dp"
+	android:layout_height="match_parent"
+	android:layout_weight="1"
+	android:background="@drawable/selector_clickable_item_bg">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:gravity="center_vertical"
+		android:paddingRight="20dp"
+		android:drawablePadding="@dimen/global_spacing_8"
+		android:textAppearance="@style/TextAppearance.Example.Button"
+		android:text="@string/global_button_done"
+		android:textSize="12sp"/>
+
+</FrameLayout>

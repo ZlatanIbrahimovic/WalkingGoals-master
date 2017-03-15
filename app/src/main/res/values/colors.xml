@@ -6,4 +6,8 @@
     <color name="helperTextColour">#FF0000</color>
     <color name="blue">#89A2C0</color>
     <color name="white">#FFFFFF</color>
+
+
+    <color name="ab_donebar_divider">#80ffffff</color>
+    <color name="global_color_control_highlight">#40000000</color>
 </resources>
