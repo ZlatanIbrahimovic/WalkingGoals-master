@@ -8,11 +8,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class EditGoalActivity extends AppCompatActivity implements View.OnClickListener{
+public class EditGoalActivity extends AppCompatActivity{
 
     Toolbar toolbar ;
     private Button btnDone;
@@ -38,9 +41,7 @@ public class EditGoalActivity extends AppCompatActivity implements View.OnClickL
 
         setContentView(R.layout.edit_goal_activity);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar1);
-
-        setSupportActionBar(toolbar);
+        setupActionBar();
 
         titleValid = false;
         distanceValid = false;
@@ -58,9 +59,6 @@ public class EditGoalActivity extends AppCompatActivity implements View.OnClickL
         addGoalDistance = (EditText)findViewById(R.id.addGoalDistance);
         helperTextDistance = (CustomTextInputLayout)findViewById(R.id.tilCustom3);
         addGoalDistance.addTextChangedListener(distanceWatcher);
-
-        btnDone = (Button) findViewById(R.id.save);
-        btnDone.setOnClickListener(this);
         
         setXMLValues();
     }
@@ -72,8 +70,7 @@ public class EditGoalActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-    @Override
-    public void onClick(View v) {
+    public void doneClick() {
 
         Context context = getApplicationContext();
         GoalContract.GoalDbHelper mDbHelper = new GoalContract.GoalDbHelper(context);
@@ -174,5 +171,42 @@ public class EditGoalActivity extends AppCompatActivity implements View.OnClickL
             }
         }
     };
+
+    private void setupActionBar()
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setContentInsetsRelative(0, 0);
+        setSupportActionBar(toolbar);
+
+        ActionBar bar = getSupportActionBar();
+
+        // custom view
+        LayoutInflater inflater = (LayoutInflater) bar.getThemedContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.ab_donebar, null);
+
+        TextView toolbarText = (TextView) customView.findViewById(R.id.toolbarText);
+        toolbarText.setText("Edit goal");
+
+        customView.findViewById(R.id.ab_donebar_done).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                doneClick();
+            }
+        });
+        customView.findViewById(R.id.ab_donebar_cancel).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+
+        // setup action bar
+        bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
+        bar.setCustomView(customView, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    }
 
 }

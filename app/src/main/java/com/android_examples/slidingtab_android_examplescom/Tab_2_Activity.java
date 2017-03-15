@@ -340,7 +340,6 @@ public class Tab_2_Activity extends Fragment {
                 }
                 else if (historyView.equals("Custom range")){
                     try {
-                        System.out.println("HELLO");
                         String fromDate = dateFrom.getText().toString().trim();
                         Calendar calendarFrom = getCalendarFromDateString(fromDate);
                         String toDate = dateTo.getText().toString().trim();

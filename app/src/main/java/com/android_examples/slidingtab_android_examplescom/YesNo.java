@@ -20,7 +20,7 @@ public class YesNo extends DialogPreference
     {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
         dialog.setTitle("Delete goal history?");
-        dialog.setMessage("This action will delete all your goals. Are you sure you want to continue?");
+        dialog.setMessage("This action will delete all your goals. This action cannot be reversed. Are you sure you want to continue?");
         dialog.setCancelable(true);
         dialog.setPositiveButton("Delete", new DialogInterface.OnClickListener()
         {
@@ -28,7 +28,7 @@ public class YesNo extends DialogPreference
             public void onClick(DialogInterface dialog, int which)
             {
                 //reset database
-                Toast.makeText(getContext(), "Application reset!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Goal history deleted", Toast.LENGTH_SHORT).show();
                 GoalContract.GoalDbHelper mDbHelper = new GoalContract.GoalDbHelper(getContext());
                 SQLiteDatabase db = mDbHelper.getWritableDatabase();
                 mDbHelper.clearHistory(db);

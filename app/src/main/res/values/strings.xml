@@ -7,7 +7,7 @@
 
     <color name="grey">#d9d9db</color>
     <string name="goalsHeading">Today\'s goal</string>
-    <string name="goalsHeading2">Other goals</string>
+    <string name="goalsHeading2">All goals</string>
     <string name="tab1">GOALS</string>
     <string name="tabTitle1">Goals</string>
     <string name="tab2">HISTORY</string>
