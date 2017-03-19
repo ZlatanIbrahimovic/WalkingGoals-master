@@ -25,6 +25,8 @@ import android.widget.Spinner;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -232,6 +234,15 @@ public class Tab_3_Activity extends Fragment {
         listView.setAdapter(adapter);
     }
 
+
+    public double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
     private GoalsListDisplay averageActivity() {
         if (historyResults != null) {
             if (historyResults.size() > 0){
@@ -241,7 +252,7 @@ public class Tab_3_Activity extends Fragment {
                     totalDistance += new DistanceConversion(Double.parseDouble(goal.getDistance()), goal.getUnits(), "Meters", view.getContext()).convert();
                     totalProgress += new DistanceConversion(goal.getProgress(), goal.getUnits(), "Meters", view.getContext()).convert();
                 }
-                return new GoalsListDisplay(-1, "", Double.toString(totalDistance/historyResults.size()), "Meters", (totalProgress/historyResults.size()), 0);
+                return new GoalsListDisplay(-1, "", Double.toString(round(totalDistance/historyResults.size(), 2)), "Meters", (round(totalProgress/historyResults.size(), 2)), 0);
             }
         }
         return new GoalsListDisplay(-1, "", "0.0", "Meters", 0.0, 0);
@@ -367,6 +378,12 @@ public class Tab_3_Activity extends Fragment {
         // Get maximum selected percentage
         int maxPercent = (int) rangeSeekBar.getSelectedMaxValue();
 
+        int maxPercentage = maxPercent;
+
+        if (maxPercent == 100){
+            maxPercentage = Integer.MAX_VALUE;
+        }
+
 //        System.out.println(historyView +  "   "  + minPercent +   "    "   + maxPercent);
 
         ArrayList<GoalsListDisplay> goals = mDbHelper.getAllGoals(db, GoalContract.Goal.TABLE_NAME);
@@ -377,7 +394,7 @@ public class Tab_3_Activity extends Fragment {
         setSystemTime();
 
         for (GoalsListDisplay goal : goals){
-            if (goal.getPercentage() >= minPercent && goal.getPercentage() <= maxPercent && goal.getDate() > 0){
+            if (goal.getPercentage() >= minPercent && goal.getPercentage() <= maxPercentage && goal.getDate() > 0){
                 if (historyView.equals("Show all")){
                     results.add(goal);
                 }

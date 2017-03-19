@@ -54,6 +54,7 @@ public class AddProgressActivity extends AppCompatActivity{
 
 
     public void doneClick() {
+        checkDistance();
         Context context = getApplicationContext();
         GoalContract.GoalDbHelper mDbHelper = new GoalContract.GoalDbHelper(context);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -96,22 +97,26 @@ public class AddProgressActivity extends AppCompatActivity{
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (addGoalDistance.getText().toString().length() == 0){
-                helperTextDistance.setHelperText("Enter a numeric value");
-                distanceValid = false;
-                return;
-            }
-            else if (!isNumeric(addGoalDistance.getText().toString())) {
-                helperTextDistance.setHelperText("Distance must be numeric");
-                distanceValid = false;
-                return;
-            }
-            else{
-                helperTextDistance.setHelperText("");
-                distanceValid = true;
-            }
+            checkDistance();
         }
     };
+
+    private void checkDistance(){
+        if (addGoalDistance.getText().toString().length() == 0){
+            helperTextDistance.setHelperText("Enter a numeric value");
+            distanceValid = false;
+            return;
+        }
+        else if (!isNumeric(addGoalDistance.getText().toString())) {
+            helperTextDistance.setHelperText("Distance must be numeric");
+            distanceValid = false;
+            return;
+        }
+        else{
+            helperTextDistance.setHelperText("");
+            distanceValid = true;
+        }
+    }
 
     private void setupActionBar()
     {

@@ -308,6 +308,12 @@ public class Tab_2_Activity extends Fragment {
         // Get maximum selected percentage
         int maxPercent = (int) rangeSeekBar.getSelectedMaxValue();
 
+        int maxPercentage = maxPercent;
+
+        if (maxPercent == 100){
+            maxPercentage = Integer.MAX_VALUE;
+        }
+
 //        System.out.println(historyView +  "   "  + minPercent +   "    "   + maxPercent);
 
         ArrayList<GoalsListDisplay> goals = mDbHelper.getAllGoalsDateDescending(db);
@@ -318,7 +324,8 @@ public class Tab_2_Activity extends Fragment {
         setSystemTime();
 
         for (GoalsListDisplay goal : goals){
-            if (goal.getPercentage() >= minPercent && goal.getPercentage() <= maxPercent && goal.getDate() > 0){
+
+            if (goal.getPercentage() >= minPercent && goal.getPercentage() <= maxPercentage && goal.getDate() > 0){
                 if (historyView.equals("Show all")){
                     results.add(goal);
                 }
