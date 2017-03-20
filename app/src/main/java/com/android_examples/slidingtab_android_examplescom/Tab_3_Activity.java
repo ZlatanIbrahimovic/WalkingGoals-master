@@ -61,11 +61,19 @@ public class Tab_3_Activity extends Fragment {
         populateSpinnerOptions();
         setupSpinnerListeners();
         initiateEditTextListeners();
+        setSpinnerValueFromSettings();
         setSelectedUnits();
         setupSeekbar();
         retrieveGoals();
         initialiseList();
         return view;
+    }
+
+
+    private void setSpinnerValueFromSettings(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String spinnerValue = prefs.getString("presentationUnits","Original units");
+        unitsSpinner.setSelection(((ArrayAdapter<String>)unitsSpinner.getAdapter()).getPosition(spinnerValue));
     }
 
 
@@ -152,23 +160,23 @@ public class Tab_3_Activity extends Fragment {
         selectedUnits = unitsSpinner.getSelectedItem().toString();
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            setSelectedUnits();
-            retrieveGoals();
-            initialiseList();
-        }
-    }
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if (isVisibleToUser) {
+//            setSelectedUnits();
+//            retrieveGoals();
+//            initialiseList();
+//        }
+//    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setSelectedUnits();
-        retrieveGoals();
-        initialiseList();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        setSelectedUnits();
+//        retrieveGoals();
+//        initialiseList();
+//    }
 
 
     /*
@@ -195,6 +203,8 @@ public class Tab_3_Activity extends Fragment {
 
                 datum.put("heading", statisticResults.get(i).getStatisticsHeading());
                 datum.put("title", statisticResults.get(i).getGoal().getTitle());
+
+
                 datum.put("percentage", String.format("%.1f", statisticResults.get(i).getGoal().getPercentage()) + "%");
                 datum.put("percentageBarValue",  String.valueOf((int) statisticResults.get(i).getGoal().getPercentage()));
 
@@ -224,7 +234,12 @@ public class Tab_3_Activity extends Fragment {
         adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
             public boolean setViewValue(View view, Object data, String textRepresentation) {
                 if (view.getId() == R.id.progressBar) {
-                    ((ProgressBar) view).setProgress(Integer.parseInt(textRepresentation));
+                    try {
+                        ((ProgressBar) view).setProgress(Integer.parseInt(textRepresentation));
+                    }
+                    catch(Exception e){
+                        ((ProgressBar) view).setProgress(0);
+                    }
                     return true;
                 }
                 return false;

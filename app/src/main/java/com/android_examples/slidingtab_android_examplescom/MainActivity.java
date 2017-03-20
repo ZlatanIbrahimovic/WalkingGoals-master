@@ -159,14 +159,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onSensorChanged(SensorEvent event) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        // If testmode is on in preferences
         if (prefs.getBoolean("stepCounter", false)){
-            System.out.println("Step counter is on");
             Globals g = (Globals)getApplication();
             int currentGoalId =g.getCurrentGoalId();
             String currentGoalUnits =g.getCurrentGoalUnits();
 
-            System.out.println("Walkingggggg");
+            System.out.println("Walking");
 
             System.out.println(String.valueOf(event.values[0]));
             stepsWalked = event.values[0];
@@ -184,8 +182,5 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
-    public float getStepsWalked(){
-        return stepsWalked;
-    }
 
 }

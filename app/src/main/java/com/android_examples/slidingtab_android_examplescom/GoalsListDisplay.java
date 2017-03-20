@@ -65,7 +65,11 @@ public class GoalsListDisplay {
     }
 
     public double getPercentage(){
-        return (float) ((100  * progress) / Float.parseFloat(distance));
+        double pct = (float) ((100  * progress) / Float.parseFloat(distance));
+        if (Double.isNaN(pct)){
+            return 0.0;
+        }
+        return pct;
     }
 
     public long getDate(){

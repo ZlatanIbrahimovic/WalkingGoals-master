@@ -29,7 +29,6 @@ public class DistanceConversion extends AppCompatActivity {
     public double convert() {
 
         if (convertFromUnits.equals("Meters")){
-            System.out.println("HERE");
             return convertFromMeters();
         }
         else if (convertFromUnits.equals("Kilometers")){

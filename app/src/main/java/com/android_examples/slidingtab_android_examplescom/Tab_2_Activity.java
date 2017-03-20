@@ -59,11 +59,19 @@ public class Tab_2_Activity extends Fragment {
         populateSpinnerOptions();
         setupSpinnerListeners();
         initiateEditTextListeners();
+        setSpinnerValueFromSettings();
         setSelectedUnits();
         setupSeekbar();
         retrieveGoals();
         initialiseList();
         return view;
+    }
+
+
+    private void setSpinnerValueFromSettings(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String spinnerValue = prefs.getString("presentationUnits","Original units");
+        unitsSpinner.setSelection(((ArrayAdapter<String>)unitsSpinner.getAdapter()).getPosition(spinnerValue));
     }
 
 
@@ -212,7 +220,12 @@ public class Tab_2_Activity extends Fragment {
         adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
             public boolean setViewValue(View view, Object data, String textRepresentation) {
                 if (view.getId() == R.id.progressBar) {
-                    ((ProgressBar) view).setProgress(Integer.parseInt(textRepresentation));
+                    try{
+                        ((ProgressBar) view).setProgress(Integer.parseInt(textRepresentation));
+                    }
+                    catch(Exception e){
+
+                    }
                     return true;
                 }
                 return false;

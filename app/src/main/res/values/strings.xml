@@ -55,6 +55,10 @@
 
     <!--preferences-->
 
+    <string name="testModePrefCat">Test mode</string>
+    <string name="stepsPrefCat">Steps</string>
+    <string name="otherPrefCat">Other</string>
+
     <string name="editGoalsTitle">Edit goals</string>
 
     <string name="notificationsTitle">Notifications</string>
@@ -68,7 +72,7 @@
 
     <string name="presentationTitle">Default presentation units</string>
     <string name="presentationSummary">Display units for activity, history and statistics</string>
-    <string name="presentationValueDefault">Meters</string>
+    <string name="presentationValueDefault">Original units</string>
     <string name="presentationDialogTitle">Default units</string>
 
     <string name="stepMappingTitle">Step length</string>

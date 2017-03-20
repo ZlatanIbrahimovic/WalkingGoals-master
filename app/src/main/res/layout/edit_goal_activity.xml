@@ -8,6 +8,26 @@
 
     <include layout="@layout/toolbar" />
 
+    <com.android_examples.slidingtab_android_examplescom.CustomTextInputLayout
+        android:id="@+id/tilCustom4"
+        android:layout_height="wrap_content"
+        app:helperText=""
+        app:helperTextColor="@color/helperTextColour"
+        android:layout_width="370dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:weightSum="1">
+
+        <EditText
+            android:id="@+id/addGoalTitle"
+            android:layout_width="395dp"
+            android:layout_height="wrap_content"
+            android:hint="Title"
+            android:textSize="24sp" />
+
+    </com.android_examples.slidingtab_android_examplescom.CustomTextInputLayout>
 
     <com.android_examples.slidingtab_android_examplescom.CustomTextInputLayout
         android:id="@+id/tilCustom3"
@@ -30,27 +50,6 @@
             android:maxLength="6"
             android:textSize="18sp"
             android:inputType="number|numberDecimal" />
-
-    </com.android_examples.slidingtab_android_examplescom.CustomTextInputLayout>
-
-    <com.android_examples.slidingtab_android_examplescom.CustomTextInputLayout
-        android:id="@+id/tilCustom4"
-        android:layout_height="wrap_content"
-        app:helperText=""
-        app:helperTextColor="@color/helperTextColour"
-        android:layout_width="370dp"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:weightSum="1">
-
-        <EditText
-            android:id="@+id/addGoalTitle"
-            android:layout_width="395dp"
-            android:layout_height="wrap_content"
-            android:hint="Title"
-            android:textSize="24sp" />
 
     </com.android_examples.slidingtab_android_examplescom.CustomTextInputLayout>
 

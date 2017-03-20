@@ -132,7 +132,7 @@
         android:textSize="30sp"
         android:id="@+id/todaysGoalPercentageTxt"
         android:layout_marginTop="100dp"
-        android:text="cdcs" />
+        android:text="No daily goal set" />
 
     <TextView
         android:layout_width="wrap_content"

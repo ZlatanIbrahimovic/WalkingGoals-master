@@ -321,7 +321,6 @@ public class Tab_1_Activity extends Fragment implements PopupMenu.OnMenuItemClic
                 new AlertDialog.Builder(getContext())
                         .setTitle("Delete goal?")
                         .setMessage("This goal will disappear from the 'Other Goals' section.")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 deleteGoal();

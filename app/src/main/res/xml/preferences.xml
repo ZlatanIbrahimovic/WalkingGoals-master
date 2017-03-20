@@ -2,53 +2,60 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <SwitchPreference
-        android:key="editGoals"
-        android:title="@string/editGoalsTitle" />
+    <PreferenceCategory android:title="@string/testModePrefCat">
 
-    <SwitchPreference
-        android:key="notifications"
-        android:title="@string/notificationsTitle" />
+        <SwitchPreference
+            android:key="testMode"
+            android:title="@string/testModeTitle" />
 
-    <SwitchPreference
-        android:key="stepCounter"
-        android:title="@string/stepCounterTitle" />
+        <com.android_examples.slidingtab_android_examplescom.DatePreference
+            android:dependency="testMode"
+            android:key="keyname"
+            android:title="@string/testModeDate"
+            android:defaultValue="2014-08-01"
+            android:summary="@string/testModeDateSummary"/>
 
-    <SwitchPreference
-        android:key="testMode"
-        android:title="@string/testModeTitle" />
+    </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/stepsPrefCat">
 
+        <SwitchPreference
+            android:key="stepCounter"
+            android:title="@string/stepCounterTitle" />
 
-    <com.android_examples.slidingtab_android_examplescom.DatePreference
-        android:dependency="testMode"
-        android:key="keyname"
-        android:title="@string/testModeDate"
-        android:defaultValue="2014-08-01"
-        android:summary="@string/testModeDateSummary"/>
+        <EditTextPreference
+            android:key="stepMapping"
+            android:title="@string/stepMappingTitle"
+            android:summary="@string/stepMappingSummary"
+            android:dialogTitle="@string/stepMappingDialogTitle"
+            android:defaultValue="@string/stepMappingValueDefault"
+            />
 
+    </PreferenceCategory>
 
-    <ListPreference
-        android:key="presentationUnits"
-        android:title="@string/presentationTitle"
-        android:summary="@string/presentationSummary"
-        android:defaultValue="@string/presentationValueDefault"
-        android:dialogTitle="@string/presentationDialogTitle"
-        android:entries="@array/units_array"
-        android:entryValues="@array/units_array" />
+    <PreferenceCategory android:title="@string/otherPrefCat">
 
-    <EditTextPreference
-        android:key="stepMapping"
-        android:title="@string/stepMappingTitle"
-        android:summary="@string/stepMappingSummary"
-        android:dialogTitle="@string/stepMappingDialogTitle"
-        android:defaultValue="@string/stepMappingValueDefault"
-        />
+        <SwitchPreference
+            android:key="notifications"
+            android:title="@string/notificationsTitle" />
 
-    <com.android_examples.slidingtab_android_examplescom.YesNo
-        android:title="@string/clearHistoryTitle"
-        />
+        <SwitchPreference
+            android:key="editGoals"
+            android:title="@string/editGoalsTitle" />
 
+        <ListPreference
+            android:key="presentationUnits"
+            android:title="@string/presentationTitle"
+            android:summary="@string/presentationSummary"
+            android:defaultValue="@string/presentationValueDefault"
+            android:dialogTitle="@string/presentationDialogTitle"
+            android:entries="@array/history_statistics_units_array"
+            android:entryValues="@array/history_statistics_units_array" />
 
+        <com.android_examples.slidingtab_android_examplescom.YesNo
+            android:title="@string/clearHistoryTitle"
+            />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
